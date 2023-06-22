@@ -17,9 +17,24 @@ fetch("http://localhost:5678/api/works")
     })
   );
 
+// Récupérer les catégories
+
+let categoryBtn = document.querySelector(".category-btn");
+console.log(categoryBtn);
+
+fetch("http://localhost:5678/api/categories")
+  .then((response) => response.json())
+  .then((data) =>
+    data.map((e) => {
+      categoryBtn.innerHTML += `  <li class="filter" data-category="${e.name}">${e.name}</li>
+`;
+    })
+  );
+
 // Filtrer les photos selon le thème
 
 let filters = document.querySelectorAll(".filter");
+console.log(filters);
 
 filters.forEach((filter) => {
   filter.addEventListener("click", function () {
