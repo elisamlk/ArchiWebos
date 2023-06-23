@@ -287,3 +287,7 @@ footer nav ul {
 .hide {
   display: none;
 }
+
+a {
+  text-decoration: none;
+}
