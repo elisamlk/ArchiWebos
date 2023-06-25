@@ -61,6 +61,6 @@ function categoryFilter(filters) {
 }
 
 // dans le then du fetch post
-localStorage.setItem("token", "1234");
+// localStorage.setItem("token", "1234");
 
 //logout
