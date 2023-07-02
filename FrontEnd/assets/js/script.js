@@ -15,7 +15,6 @@ fetch("http://localhost:5678/api/categories")
 
 // Récupérer les travaux avec fetch et les afficher
 let gallery = document.querySelector(".gallery");
-
 fetch("http://localhost:5678/api/works")
   .then((response) => response.json())
   .then((data) =>
@@ -29,9 +28,7 @@ fetch("http://localhost:5678/api/works")
   );
 
 function categoryFilter(filters) {
-  // let filters = document.querySelectorAll(".filter");
   console.log(filters);
-
   filters.forEach((filter) => {
     filter.addEventListener("click", function () {
       let selectedFilter = filter.getAttribute("data-category");
@@ -49,18 +46,39 @@ function categoryFilter(filters) {
 
       itemsToHide.forEach((el) => {
         el.classList.add("hide");
-        // el.classList.remove("show");
       });
 
       itemsToShow.forEach((el) => {
         el.classList.remove("hide");
-        // el.classList.add("show");
       });
     });
   });
 }
 
-// dans le then du fetch post
-// localStorage.setItem("token", "1234");
-
 //logout
+// let editArea = document.querySelector(".edit-area");
+let logButton = document.querySelector(".login");
+// console.log(editArea);
+
+let token = window.localStorage.getItem("token");
+//Si admin est connecté
+if (token) {
+  logout();
+
+  // fonction pour modifier
+}
+
+function logout() {
+  logButton.textContent = "logout";
+  logButton.addEventListener("click", () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    window.location = "index.html";
+  });
+}
+
+// fonction modifier
+// ajouter les boutons modifier
+// addEventlistener --> creer modale, afficher les travaux ( refaire appel à fetch ), créer un nouveau travail
+// click créer un nouveau travail, modifier
+// proxy server plugin  à installer dans vscode

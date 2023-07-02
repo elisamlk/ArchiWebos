@@ -2,7 +2,6 @@
 // info = { email: "sophie.bluel@test.tld", password: "S0phie" };
 
 let logIn = document.getElementById("submit");
-
 logIn.addEventListener("click", async (e) => {
   e.preventDefault();
   const email = document.getElementById("email").value;
@@ -23,10 +22,18 @@ logIn.addEventListener("click", async (e) => {
   let response = await result.json();
 
   if (result.ok) {
-    location.href = "../../index.html";
+    window.location = "../../index.html";
     localStorage.setItem("userId", response.userId);
     localStorage.setItem("token", response.token);
+   
   } else {
     alert("Erreur d'authentification");
   }
 });
+
+
+
+
+
+
+//editArea.innerHTML += `<button class="edition-button">Mode édition</button><button class="publish">publier les changements</button>`;
