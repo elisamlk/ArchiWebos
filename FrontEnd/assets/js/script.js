@@ -64,6 +64,7 @@ if (token) {
   logout();
   // fonction pour éditer/modifier la page
   change();
+
   edit();
 }
 
@@ -99,6 +100,7 @@ function edit() {
   editButton.addEventListener("click", () => {
     modal.style.display = "block";
     let modalElement = document.querySelector(".modal-element");
+    modalElement.innerHTML = "";
     fetch("http://localhost:5678/api/works")
       .then((response) => response.json())
       .then((data) =>
@@ -106,10 +108,43 @@ function edit() {
           modalElement.innerHTML += ` <figure class="project-modal" >
   <img class="project-img" src="${e.imageUrl}" alt="${e.title}">
   <figcaption>éditer</figcaption>
+  <span id="${e.id}" class="delete">O</span>
 </figure>
 `;
         })
-      );
+      )
+      .then(() => {
+        let arrayDelete = document.querySelectorAll(".delete");
+        console.log(arrayDelete);
+        arrayDelete.forEach((btnDelete) => {
+          btnDelete.addEventListener("click", (e) => {
+            let idDeleted = e.target.id;
+            let token = localStorage.getItem("token");
+            fetch(`http://localhost:5678/api/works/${idDeleted}`, {
+              method: `DELETE`,
+              headers: {
+                "Content-Type": "Application/Json",
+                Authorization: `Bearer ${token}`,
+              },
+            }).then((response) => {
+              if (response.ok) {
+                console.log("ok");
+
+                // fonction pour afficher les miniatures et page principale
+              } else {
+                console.log("erreur");
+              }
+            });
+            //});
+            console.log(idDeleted);
+          });
+        });
+      });
+
+    let addWork = document.querySelector(".add-work");
+    addWork.addEventListener("click", () => {
+      modalElement.innerHTML += `<p>Ajouter une image</p>`;
+    });
   });
 
   // Fermeture de la modale
