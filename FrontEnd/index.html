@@ -12,8 +12,13 @@
     />
     <meta name="description" content="" />
     <link rel="stylesheet" href="./assets/style.css" />
+    <script
+      src="https://kit.fontawesome.com/8dacf958f8.js"
+      crossorigin="anonymous"
+    ></script>
   </head>
   <body>
+    <div class="edit-banner"></div>
     <header>
       <h1>Sophie Bluel <span>Architecte d'inteérieur</span></h1>
       <nav>
@@ -26,7 +31,6 @@
       </nav>
     </header>
     <main>
-      <input type="file" />
       <section id="introduction">
         <figure>
           <img src="./assets/images/sophie-bluel.png" alt="" />
@@ -51,7 +55,21 @@
         </article>
       </section>
       <section id="portfolio">
-        <h2>Mes Projets</h2>
+        <h2 class="project-title">Mes Projets</h2>
+        <aside id="modal" class="modal">
+          <div class="modal-wrapper">
+            <button id="closeBtn">Fermer</button>
+            <h3>Galerie Photo</h3>
+            <div class="modal-content">
+              <div class="modal-element"></div>
+            </div>
+            <div class="btn-display">
+              <button class="add-work">Ajouter une photo</button>
+              <button class="delete-work">Supprimer la galerie</button>
+            </div>
+          </div>
+        </aside>
+
         <ul class="category-btn">
           <li class="filter" data-category="tous">Tous</li>
         </ul>

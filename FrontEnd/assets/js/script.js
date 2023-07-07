@@ -56,16 +56,15 @@ function categoryFilter(filters) {
 }
 
 //logout
-// let editArea = document.querySelector(".edit-area");
 let logButton = document.querySelector(".login");
-// console.log(editArea);
-
 let token = window.localStorage.getItem("token");
 //Si admin est connecté
 if (token) {
+  // fonction pour se déconnecter
   logout();
-
-  // fonction pour modifier
+  // fonction pour éditer/modifier la page
+  change();
+  edit();
 }
 
 function logout() {
@@ -74,6 +73,48 @@ function logout() {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
     window.location = "index.html";
+  });
+}
+
+//  <input type="file" />
+
+function change() {
+  categoryBtn.classList.add("hide");
+  let editBanner = document.querySelector(".edit-banner");
+  editBanner.innerHTML += `<i class="fas fa-edit"> Mode édition </i><button class="publish">publier les changements</button>`;
+}
+
+function edit() {
+  let projectTitle = document.querySelector(".project-title");
+  // Création du bouton modifier
+  let editButton = document.createElement("button");
+  editButton.classList.add("edit-button");
+  editButton.textContent = "modifier";
+  projectTitle.appendChild(editButton);
+
+  // Ouverture de la modale
+  let modal = document.getElementById("modal");
+  let closeBtn = document.getElementById("closeBtn");
+
+  editButton.addEventListener("click", () => {
+    modal.style.display = "block";
+    let modalElement = document.querySelector(".modal-element");
+    fetch("http://localhost:5678/api/works")
+      .then((response) => response.json())
+      .then((data) =>
+        data.map((e) => {
+          modalElement.innerHTML += ` <figure class="project-modal" >
+  <img class="project-img" src="${e.imageUrl}" alt="${e.title}">
+  <figcaption>éditer</figcaption>
+</figure>
+`;
+        })
+      );
+  });
+
+  // Fermeture de la modale
+  closeBtn.addEventListener("click", () => {
+    modal.style.display = "none";
   });
 }
 
