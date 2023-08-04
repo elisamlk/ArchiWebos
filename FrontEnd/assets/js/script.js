@@ -1,12 +1,14 @@
 let modal = document.getElementById("modal");
 let closeBtn = document.getElementById("closeBtn");
+
 // Récupérer les catégories
 let categoryBtn = document.querySelector(".category-btn");
 let filters;
-
+var categoryArray;
 fetch("http://localhost:5678/api/categories")
   .then((response) => response.json())
   .then((data) => {
+    categoryArray = [...data];
     data.map((e) => {
       categoryBtn.innerHTML += `<li class="filter" data-category="${e.name}">${e.name}</li>
 `;
@@ -15,19 +17,22 @@ fetch("http://localhost:5678/api/categories")
     categoryFilter(filters);
   });
 
-// Récupérer les travaux avec fetch et les afficher
-let gallery = document.querySelector(".gallery");
-fetch("http://localhost:5678/api/works")
-  .then((response) => response.json())
-  .then((data) =>
-    data.map((e) => {
-      gallery.innerHTML += ` <figure class="project" data-filter="${e.category.name}">
+function addImages() {
+  let gallery = document.querySelector(".gallery");
+  fetch("http://localhost:5678/api/works")
+    .then((response) => response.json())
+    .then((data) =>
+      data.map((e) => {
+        gallery.innerHTML += ` <figure class="project" data-filter="${e.category.name}">
   <img src="${e.imageUrl}" alt="${e.title}">
   <figcaption>${e.title}</figcaption>
 </figure>
 `;
-    })
-  );
+      })
+    );
+}
+
+addImages();
 
 function categoryFilter(filters) {
   console.log(filters);
@@ -77,8 +82,6 @@ function logout() {
     window.location = "index.html";
   });
 }
-
-//  <input type="file" />
 
 function change() {
   categoryBtn.classList.add("hide");
@@ -153,14 +156,14 @@ function edit() {
         });
       });
 
-    let addWork = document.querySelector(".add-work");
+    let addWork = document.querySelector(".add-work-button");
     addWork.addEventListener("click", () => {
       let modalWrapper = document.querySelector(".modal-wrapper");
       let modalContent = document.querySelector(".modal-content");
       modalContent.classList.add("hide");
       let addWorkTitle = document.querySelector(".modal-title");
       addWorkTitle.textContent = "Ajout Photo";
-      let addWorkDiv = document.createElement("div");
+      let addWorkDiv = document.createElement("form");
       addWorkDiv.classList.add("add-work");
       modalWrapper.appendChild(addWorkDiv);
       let addWork = document.createElement("div");
@@ -182,41 +185,89 @@ function edit() {
       input.id = "input-element";
       input.classList.add("hide");
       addWork.appendChild(input);
+      let docSize = document.createElement("p");
+      docSize.innerText = "jpg, png : 4mo max";
+      docSize.classList.add("doc-size");
+      addWork.appendChild(docSize);
       input.addEventListener("change", (e) => {
-        // console.log(e.target.files[0]);
         let fileName = e.target.files[0].name;
         addWorkImg.src = "../FrontEnd/assets/images/" + fileName;
+      });
+
+      let title = document.createElement("h4");
+      let inputTitle = document.createElement("input");
+      let category = document.createElement("h4");
+      // let inputCategory = document.createElement("input");
+      let selectCategory = document.createElement("select");
+      let firstOption = document.createElement("option");
+      firstOption.innerText = "Veuillez sélectionner une catégorie";
+      selectCategory.appendChild(firstOption);
+      categoryArray.forEach((category) => {
+        let option = document.createElement("option");
+        option.innerText = category.name;
+        selectCategory.appendChild(option);
+      });
+
+      let validationButton = document.createElement("button");
+
+      title.textContent = "Titre";
+      inputTitle.classList.add("input-title");
+      category.textContent = "Catégorie";
+      selectCategory.classList.add("input-category");
+      validationButton.textContent = "Validation";
+      validationButton.classList.add("validation-button");
+
+      addWorkDiv.appendChild(title);
+      addWorkDiv.appendChild(inputTitle);
+      addWorkDiv.appendChild(category);
+      addWorkDiv.appendChild(selectCategory);
+      addWorkDiv.appendChild(validationButton);
+
+      validationButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        // console.log(addWorkImg.src);
+        // console.log(inputTitle.value);
+        // console.log(selectCategory.selectedIndex);
+        sendInfo(addWorkImg, inputTitle.value, selectCategory.selectedIndex);
       });
     });
   });
 
-  // Fonction pour ajouter l'image via une requête POST avec l'API fetch
-  //const cheminDeLImage = "chemin_vers_votre_image.jpg";
-  // function addImage() {
+  function sendInfo(addWorkImg, inputTitle, selectCategory) {
+    let imageOk = addWorkImg.src.includes("assets/images/picture.png")
+      ? false
+      : true;
+    let inputTitleOk = inputTitle.length > 0 ? true : false;
+    let selectCategoryOk = selectCategory === 0 ? false : true;
+    if (!imageOk && !inputTitleOk && !selectCategoryOk) {
+      alert("Veuillez remplir tous les champs");
+    } else {
+      sendMethodPost(inputTitle, selectCategory);
+    }
+  }
 
-  //   const url = "http://localhost:5678/api/works";
+  function sendMethodPost(inputTitle, selectCategory) {
+    const url = "http://localhost:5678/api/works";
+    const form = document.querySelector("form");
+    const formData = new FormData();
+    let image = document.getElementById("input-element");
+    console.log(image);
+    formData.append("image", image.files[0]);
+    formData.append("title", inputTitle);
+    formData.append("category", 1);
+    let token = localStorage.getItem("token");
 
-  //   try {
-  //     const imageFile = fetch(cheminDeLImage).then((response) =>
-  //       response.blob()
-  //     );
-
-  //     const formData = new FormData();
-  //     formData.append("image", imageFile, "nom_de_l_image.jpg");
-
-  //     const options = {
-  //       method: "POST",
-  //       body: formData,
-  //     };
-
-  //     const response = fetch(url, options);
-  //     const data = response.json();
-
-  //     console.log("Réponse du serveur :", data);
-  //   } catch (error) {
-  //     console.error("Erreur lors de l'ajout de l'image :", error);
-  //   }
-  // }
+    fetch(url, {
+      method: "POST",
+      headers: {
+        Accept: "Application/Json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((data) => (modal.style.display = "none"), addImages());
+  }
 
   // Fermeture de la modale
   closeBtn.addEventListener("click", () => {
