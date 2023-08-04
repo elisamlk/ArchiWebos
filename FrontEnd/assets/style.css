@@ -333,7 +333,8 @@ i {
   background-color: rgba(0, 0, 0, 0.4);
 }
 
-.modal-wrapper {
+.modal-wrapper,
+.modal-wrapper-upload {
   background-color: #fff;
   width: 70%;
   margin: 100px auto;
@@ -368,12 +369,36 @@ h3 {
   flex-wrap: wrap;
 }
 
-.btn-display{
+.btn-display {
   display: flex;
- align-items: center;
+  align-items: center;
   flex-direction: column;
 }
 
+.add-work {
+  display: flex;
+  justify-content: center;
+}
 
+.addWork {
+  background-color: #e8f1f6;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+  padding: 2em;
+}
 
+.input-element {
+  border: none;
+}
 
+.add-img {
+  width:20%;
+  object-fit: cover;
+}
+
+.label{
+  border:black;
+}

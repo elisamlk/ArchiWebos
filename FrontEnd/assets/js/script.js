@@ -1,3 +1,5 @@
+let modal = document.getElementById("modal");
+let closeBtn = document.getElementById("closeBtn");
 // Récupérer les catégories
 let categoryBtn = document.querySelector(".category-btn");
 let filters;
@@ -64,7 +66,6 @@ if (token) {
   logout();
   // fonction pour éditer/modifier la page
   change();
-
   edit();
 }
 
@@ -94,8 +95,6 @@ function edit() {
   projectTitle.appendChild(editButton);
 
   // Ouverture de la modale
-  let modal = document.getElementById("modal");
-  let closeBtn = document.getElementById("closeBtn");
 
   editButton.addEventListener("click", () => {
     modal.style.display = "block";
@@ -129,6 +128,19 @@ function edit() {
             }).then((response) => {
               if (response.ok) {
                 console.log("ok");
+                gallery = "";
+                let gallery = document.querySelector(".gallery");
+                fetch("http://localhost:5678/api/works")
+                  .then((response) => response.json())
+                  .then((data) =>
+                    data.map((e) => {
+                      gallery.innerHTML += ` <figure class="project" data-filter="${e.category.name}">
+  <img src="${e.imageUrl}" alt="${e.title}">
+  <figcaption>${e.title}</figcaption>
+</figure>
+`;
+                    })
+                  );
 
                 // fonction pour afficher les miniatures et page principale
               } else {
@@ -143,18 +155,71 @@ function edit() {
 
     let addWork = document.querySelector(".add-work");
     addWork.addEventListener("click", () => {
-      modalElement.innerHTML += `<p>Ajouter une image</p>`;
+      let modalWrapper = document.querySelector(".modal-wrapper");
+      let modalContent = document.querySelector(".modal-content");
+      modalContent.classList.add("hide");
+      let addWorkTitle = document.querySelector(".modal-title");
+      addWorkTitle.textContent = "Ajout Photo";
+      let addWorkDiv = document.createElement("div");
+      addWorkDiv.classList.add("add-work");
+      modalWrapper.appendChild(addWorkDiv);
+      let addWork = document.createElement("div");
+      addWork.classList.add("addWork");
+      addWorkDiv.appendChild(addWork);
+      let addWorkImg = document.createElement("img");
+      addWorkImg.src = "../FrontEnd/assets/images/picture.png";
+      addWorkImg.classList.add("add-img");
+      addWork.appendChild(addWorkImg);
+      let labelElement = document.createElement("label");
+      labelElement.classList.add("label");
+      labelElement.innerText = "+ Ajout photo";
+      labelElement.htmlFor = "input-element";
+      addWork.appendChild(labelElement);
+      let input = document.createElement("input");
+      input.type = "file";
+      input.accept = "image";
+      input.name = "+ Ajouter photo";
+      input.id = "input-element";
+      input.classList.add("hide");
+      addWork.appendChild(input);
+      input.addEventListener("change", (e) => {
+        // console.log(e.target.files[0]);
+        let fileName = e.target.files[0].name;
+        addWorkImg.src = "../FrontEnd/assets/images/" + fileName;
+      });
     });
   });
+
+  // Fonction pour ajouter l'image via une requête POST avec l'API fetch
+  //const cheminDeLImage = "chemin_vers_votre_image.jpg";
+  // function addImage() {
+
+  //   const url = "http://localhost:5678/api/works";
+
+  //   try {
+  //     const imageFile = fetch(cheminDeLImage).then((response) =>
+  //       response.blob()
+  //     );
+
+  //     const formData = new FormData();
+  //     formData.append("image", imageFile, "nom_de_l_image.jpg");
+
+  //     const options = {
+  //       method: "POST",
+  //       body: formData,
+  //     };
+
+  //     const response = fetch(url, options);
+  //     const data = response.json();
+
+  //     console.log("Réponse du serveur :", data);
+  //   } catch (error) {
+  //     console.error("Erreur lors de l'ajout de l'image :", error);
+  //   }
+  // }
 
   // Fermeture de la modale
   closeBtn.addEventListener("click", () => {
     modal.style.display = "none";
   });
 }
-
-// fonction modifier
-// ajouter les boutons modifier
-// addEventlistener --> creer modale, afficher les travaux ( refaire appel à fetch ), créer un nouveau travail
-// click créer un nouveau travail, modifier
-// proxy server plugin  à installer dans vscode
