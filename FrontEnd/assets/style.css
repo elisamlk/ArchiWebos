@@ -314,6 +314,7 @@ a {
   border-radius: 1em;
   padding: 0.6em;
   margin-left: 1em;
+  cursor: pointer;
 }
 
 i {
@@ -348,6 +349,7 @@ i {
 
 #closeBtn {
   float: right;
+  cursor: pointer;
 }
 
 .project-img {
@@ -494,13 +496,20 @@ h3 {
   margin-left: 1em;
   font-size: medium;
   font-weight: 100;
+  cursor: pointer;
 }
 
 .trash {
+  padding: 5px;
   background-color: black;
   position: absolute;
-  right: 10px;
+  right: 15px;
   top: 5px;
-  width: 15px;
   height: auto;
+  border-radius: 5px;
+  cursor: pointer;
 }
+
+/* .fa-arrow-left::before{
+  display: none;
+} */

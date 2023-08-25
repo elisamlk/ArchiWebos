@@ -1,5 +1,6 @@
 let modal = document.getElementById("modal");
 let closeBtn = document.getElementById("closeBtn");
+let gallery = document.querySelector(".gallery");
 
 // Récupérer les catégories
 let categoryBtn = document.querySelector(".category-btn");
@@ -18,7 +19,7 @@ fetch("http://localhost:5678/api/categories")
   });
 
 function addImages() {
-  let gallery = document.querySelector(".gallery");
+  gallery.innerHTML = "";
   fetch("http://localhost:5678/api/works")
     .then((response) => response.json())
     .then((data) =>
@@ -103,8 +104,10 @@ function edit() {
 
   // Ouverture de la modale
 
-  editButton.addEventListener("click", () => {
-    modal.style.display = "block";
+  // AJouter les miniatures dans la modale
+
+  // Ajout des mini
+  function showMini() {
     let modalElement = document.querySelector(".modal-element");
     modalElement.innerHTML = "";
     fetch("http://localhost:5678/api/works")
@@ -144,31 +147,33 @@ function edit() {
               },
             }).then((response) => {
               if (response.ok) {
-                console.log("ok");
+                showMini();
 
-                let gallery = document.querySelector(".gallery");
-                gallery = "";
-                fetch("http://localhost:5678/api/works")
-                  .then((response) => response.json())
-                  .then((data) =>
-                    data.map((e) => {
-                      gallery.innerHTML += ` <figure class="project" data-filter="${e.category.name}">
-  <img src="${e.imageUrl}" alt="${e.title}">
-  <figcaption>${e.title}</figcaption>
-</figure>
-`;
-                    })
-                  );
+                console.log("ok");
+                modalElement = "";
+
+                addImages();
               } else {
                 console.log("erreur");
               }
             });
-            //});
+
             console.log(idDeleted);
           });
         });
       });
+  }
 
+  let back = document.querySelector(".fa-arrow-left");
+  back.addEventListener("click", () => {
+    console.log("click");
+  initModal();
+    showMini();
+ 
+    
+  });
+
+  function initModal() {
     let addWork = document.querySelector(".add-work-button");
     addWork.addEventListener("click", () => {
       let modalWrapper = document.querySelector(".modal-wrapper");
@@ -238,12 +243,18 @@ function edit() {
 
       validationButton.addEventListener("click", (e) => {
         e.preventDefault();
-        // console.log(addWorkImg.src);
-        // console.log(inputTitle.value);
-        // console.log(selectCategory.selectedIndex);
+
         sendInfo(addWorkImg, inputTitle.value, selectCategory.selectedIndex);
       });
     });
+  }
+
+  editButton.addEventListener("click", () => {
+    modal.style.display = "block";
+
+    showMini();
+    initModal();
+
   });
 
   function sendInfo(addWorkImg, inputTitle, selectCategory) {
@@ -279,7 +290,8 @@ function edit() {
       body: formData,
     })
       .then((response) => response.json())
-      .then((data) => (modal.style.display = "none"), addImages());
+      .then((data) => addImages())
+      .then((modal.style.display = "none"));
   }
 
   // Fermeture de la modale
