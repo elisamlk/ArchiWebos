@@ -277,6 +277,7 @@ footer nav ul {
   padding: 0.5em;
   color: #1d6154;
   cursor: pointer;
+  margin-right: 0.5em;
 }
 
 .category-btn li:hover {
@@ -297,11 +298,14 @@ a {
 }
 
 .edit-banner {
-  background-color: black;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 1em;
+}
+
+.edit-banner-display {
+  background-color: black;
 }
 
 .publish {
@@ -354,6 +358,7 @@ i {
 .project-modal {
   margin-right: 0.5em;
   margin-bottom: 1em;
+  position: relative;
 }
 
 h3 {
@@ -478,7 +483,24 @@ h3 {
 
 #closeBtn {
   border: none;
-  color:black;
+  color: black;
 }
 
+#portfolio i {
+  color: black;
+}
 
+.project-title .fa-edit {
+  margin-left: 1em;
+  font-size: medium;
+  font-weight: 100;
+}
+
+.trash {
+  background-color: black;
+  position: absolute;
+  right: 10px;
+  top: 5px;
+  width: 15px;
+  height: auto;
+}
