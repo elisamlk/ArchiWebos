@@ -93,10 +93,6 @@ function change() {
 
 function edit() {
   let projectTitle = document.querySelector(".project-title");
-  // Création du bouton modifier
-  // let editButton = document.createElement("button");
-  // editButton.classList.add("edit-button");
-  // editButton.textContent = "modifier";
   let editButton = document.createElement("i");
   editButton.classList.add("fa", "fa-edit");
   editButton.textContent = "modifier";
@@ -167,15 +163,29 @@ function edit() {
   let back = document.querySelector(".fa-arrow-left");
   back.addEventListener("click", () => {
     console.log("click");
-  initModal();
     showMini();
+    initModalMini();
  
     
   });
 
+function initModalMini(){
+  let modalWrapper = document.querySelector(".modal-wrapper");
+  let form = modalWrapper.querySelector('form');
+  modalWrapper.removeChild(form);
+
+  let modalContent = document.querySelector(".modal-content");
+      modalContent.classList.remove("hide");
+
+}
+
+let eventOnAir = false;
   function initModal() {
     let addWork = document.querySelector(".add-work-button");
-    addWork.addEventListener("click", () => {
+    if(!eventOnAir){
+    addWork.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
       let modalWrapper = document.querySelector(".modal-wrapper");
       let modalContent = document.querySelector(".modal-content");
       modalContent.classList.add("hide");
@@ -215,7 +225,6 @@ function edit() {
       let title = document.createElement("h4");
       let inputTitle = document.createElement("input");
       let category = document.createElement("h4");
-      // let inputCategory = document.createElement("input");
       let selectCategory = document.createElement("select");
       let firstOption = document.createElement("option");
       firstOption.innerText = "Veuillez sélectionner une catégorie";
@@ -247,6 +256,8 @@ function edit() {
         sendInfo(addWorkImg, inputTitle.value, selectCategory.selectedIndex);
       });
     });
+  }
+  eventOnAir=true;
   }
 
   editButton.addEventListener("click", () => {
@@ -292,10 +303,18 @@ function edit() {
       .then((response) => response.json())
       .then((data) => addImages())
       .then((modal.style.display = "none"));
+      showMini();
+      initModalMini();
+     // initModal();
+     
   }
 
   // Fermeture de la modale
   closeBtn.addEventListener("click", () => {
     modal.style.display = "none";
+    showMini();
+    initModalMini();
   });
+
+
 }
