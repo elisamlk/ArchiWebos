@@ -500,7 +500,7 @@ h3 {
 }
 
 .trash {
-  padding: 5px;
+  padding: 7px;
   background-color: black;
   position: absolute;
   right: 15px;
@@ -508,6 +508,11 @@ h3 {
   height: auto;
   border-radius: 5px;
   cursor: pointer;
+}
+
+.fa-trash-alt:before {
+  content: "\f2ed";
+  color: white;
 }
 
 /* .fa-arrow-left::before{
